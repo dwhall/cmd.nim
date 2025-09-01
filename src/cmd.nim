@@ -39,8 +39,8 @@ type
     postCmd*: CmdCallback
       ## A callback that gets run prior to the command being run (optional)
   CmdPrompt* = object
-    commands*: HashSet[Command]
-    promptString*: string
+    commands: HashSet[Command]
+    promptString: string
     activePrompt: bool
   CmdCallback* = proc (ctx: var CmdPrompt, input: seq[string]): void {.gcsafe.}
 
@@ -126,6 +126,13 @@ proc run*(ctx: var CmdPrompt): void =
     let input = strutils.split(raw_input)
     ctx.executeCommandInput(input)
 
-proc hash*(command: Command): hashes.Hash =
-  ## Exposing the hash implementation for the `Command` object
-  result = hash(command.name)
+proc newCmdPrompt*(
+    commands: openArray[Command],
+    promptString: string = "> ",
+    activePrompt: bool = false,
+): CmdPrompt =
+  ## CmdPrompt constructor
+  # hides the implementation details of the container type for commands
+  result.commands = toHashSet(commands)
+  result.promptString = promptString
+  result.activePrompt = activePrompt
