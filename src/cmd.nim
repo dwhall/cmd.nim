@@ -29,27 +29,21 @@ type
   Command* = object
     ## Object representing a command that can be registered with the command prompt
     name*: string
-      ## Name of the command, the first word that will be entered into the prompt, all following words are arguments to this command
-    desc*: string
-      ## Short description of the command 
-    help*: string
-      ## Text to display when invoking the `help` command for this command
+      ## Name of the command, the first word that will be entered into the prompt,
+      ## all following words are arguments to this command
+    desc*: string ## Short description of the command
+    help*: string ## Text to display when invoking the `help` command for this command
     preCmd*: CmdCallback
       ## A callback that gets run prior to the command being run (optional)
-    exeCmd*: CmdCallback
-      ## Function contaning the primary logic for the command 
+    exeCmd*: CmdCallback ## Function contaning the primary logic for the command
     postCmd*: CmdCallback
       ## A callback that gets run prior to the command being run (optional)
   CmdPrompt* = object
-    ## 
     commands*: HashSet[Command]
     promptString*: string
     activePrompt: bool
   CmdCallback* = proc (ctx: var CmdPrompt, input: seq[string]): void {.gcsafe.}
-    ## 
 
-#
-##
 proc builtinHelpCommand(ctx: var CmdPrompt, input: seq[string]): void =
   if input.len == 0:
     # asking for general help, not help of a specific command, this should list all available commands
@@ -70,40 +64,42 @@ proc builtinHelpCommand(ctx: var CmdPrompt, input: seq[string]): void =
         if command.name == queried_command:
           write(stdout, command.help)
 
-# Disable the current run-loop behavior of the prompt, allowing it to exit and return to the caller of `.run()`
-##
 proc builtinQuitCommand(ctx: var CmdPrompt, input: seq[string]): void =
+  ## Disables the current run-loop behavior of the prompt, allowing it to exit and return to the caller of `.run()`
   ctx.activePrompt = false
 
 # ===========
 # Private API
 # ===========
 
-# (re)Draws the prompt
-##
 proc drawPrompt(ctx: var CmdPrompt): void =
   let prompt_prefix: string =
-    if ctx.promptString == nil: "(Cmd) "
-    else: ctx.promptString
+    if ctx.promptString == nil: "(Cmd) " else: ctx.promptString
   write(stdout, "\n" & prompt_prefix)
   flushFile(stdout)
 
-#
-##
 proc executeCommandInput(ctx: var CmdPrompt, input: seq[string]): void =
   let command_str: string =
-    if input.len > 0: input[0]
-    else: ""
+    if input.len > 0:
+      input[0]
+    else:
+      ""
   let arguments: seq[string] =
-    if input.len >= 1: input[1..input.high]
-    else: @[]
-  case command_str:
+    if input.len >= 1:
+      input[1 .. input.high]
+    else:
+      @[]
+  case command_str
   of "help":
     builtinHelpCommand(ctx, arguments)
   of "quit", "exit":
     builtinQuitCommand(ctx, arguments)
   else:
-    let matched_commands = filter(toSeq(ctx.commands.items), proc (x: Command): bool = x.name == command_str)
+    let matched_commands = filter(
+      toSeq(ctx.commands.items),
+      proc(x: Command): bool =
+        x.name == command_str,
+    )
     if matched_commands.len > 0:
       let command = matched_commands[0]
       if not (command.preCmd == nil):
@@ -120,7 +116,6 @@ proc executeCommandInput(ctx: var CmdPrompt, input: seq[string]): void =
 # ==========
 # Public API
 # ==========
- 
 
 proc run*(ctx: var CmdPrompt): void =
   ## Starts the interactive command prompt
