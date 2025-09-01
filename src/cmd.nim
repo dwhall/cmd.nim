@@ -6,17 +6,17 @@ Redistribution and use in source and binary forms, with or without modification,
 
 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
 
-2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the 
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the
   documentation and/or other materials provided with the distribution.
 
-3. Neither the name of Samantha Marshall nor the names of its contributors may be used to endorse or promote products derived from this 
+3. Neither the name of Samantha Marshall nor the names of its contributors may be used to endorse or promote products derived from this
   software without specific prior written permission.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED 
-TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
-CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
-LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ]#
 
@@ -82,7 +82,7 @@ proc builtinQuitCommand(ctx: var CmdPrompt, input: seq[string]): void =
 # (re)Draws the prompt
 ##
 proc drawPrompt(ctx: var CmdPrompt): void =
-  let prompt_prefix: string = 
+  let prompt_prefix: string =
     if ctx.promptString == nil: "(Cmd) "
     else: ctx.promptString
   write(stdout, "\n" & prompt_prefix)
@@ -91,11 +91,11 @@ proc drawPrompt(ctx: var CmdPrompt): void =
 #
 ##
 proc executeCommandInput(ctx: var CmdPrompt, input: seq[string]): void =
-  let command_str: string = 
-    if input.len > 0: input[0] 
+  let command_str: string =
+    if input.len > 0: input[0]
     else: ""
-  let arguments: seq[string] = 
-    if input.len >= 1: input[1..input.high] 
+  let arguments: seq[string] =
+    if input.len >= 1: input[1..input.high]
     else: @[]
   case command_str:
   of "help":
@@ -121,7 +121,8 @@ proc executeCommandInput(ctx: var CmdPrompt, input: seq[string]): void =
 # Public API
 # ==========
  
-proc run*(ctx: var CmdPrompt): void = 
+
+proc run*(ctx: var CmdPrompt): void =
   ## Starts the interactive command prompt
   ctx.activePrompt = true
   while ctx.activePrompt:
